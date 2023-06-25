@@ -1,6 +1,6 @@
 [package]
 name = "deboog"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Alex Unigovsky <unik@devrandom.ru>"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
@@ -10,5 +10,8 @@ readme = "README.md"
 keywords = ["debug", "derive", "macro", "masking"]
 categories = ["rust-patterns", "development-tools::debugging", "value-formatting"]
 
+[workspace]
+members = ["deboog-derive"]
+
 [dependencies]
-deboog-derive = { path = "deboog-derive", version = "0.1.0" }
+deboog-derive = { path = "deboog-derive", version = "0.1.1" }
