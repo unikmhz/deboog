@@ -1,0 +1,18 @@
+[package]
+name = "deboog-derive"
+version = "0.1.0"
+authors = ["Alex Unigovsky <unik@devrandom.ru>"]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+repository = "https://github.com/unikmhz/deboog"
+description = "Procedural macros for deboog crate"
+readme = "../README.md"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+darling = "0.20"
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "2.0", features = ["full"] }

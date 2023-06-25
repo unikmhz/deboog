@@ -1,0 +1,14 @@
+[package]
+name = "deboog"
+version = "0.1.0"
+authors = ["Alex Unigovsky <unik@devrandom.ru>"]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+repository = "https://github.com/unikmhz/deboog"
+description = "Derive macro for extended debug formatting"
+readme = "README.md"
+keywords = ["debug", "derive", "macro", "masking"]
+categories = ["rust-patterns", "development-tools::debugging", "value-formatting"]
+
+[dependencies]
+deboog-derive = { path = "deboog-derive", version = "0.1.0" }
