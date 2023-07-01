@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - directory: /
+    open-pull-requests-limit: 10
+    package-ecosystem: cargo
+    rebase-strategy: auto
+    schedule:
+      interval: daily
+      timezone: "05:00 UTC"
+  - directory: /
+    open-pull-requests-limit: 10
+    package-ecosystem: github-actions
+    rebase-strategy: auto
+    schedule:
+      interval: daily
+      timezone: "05:00 UTC"
