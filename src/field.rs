@@ -1,22 +1,51 @@
 use crate::masking::*;
 
-pub trait DeboogField<T> {
-    fn mask_pan(&self) -> String;
-    fn mask_pan_suffix(&self) -> String;
-    fn mask_all(&self) -> String;
+/// Trait used to produce masked values
+pub trait DeboogField<T = DisplayStr> {
+    /// Used for `#[deboog(mask = "all")]`
+    ///
+    /// Default implementation is provided, which swaps the value for three asterisks.
+    fn mask_all(&self) -> String {
+        HIDE_STR.into()
+    }
 
+    /// Used for `#[deboog(mask = "pan")]`
+    ///
+    /// Default implementation is provided, which swaps the value for three asterisks.
+    fn mask_pan(&self) -> String {
+        HIDE_STR.into()
+    }
+
+    /// Used for `#[deboog(mask = "pan_suffix")]`
+    ///
+    /// Default implementation is provided, which swaps the value for three asterisks.
+    fn mask_pan_suffix(&self) -> String {
+        HIDE_STR.into()
+    }
+
+    /// Used for `#[deboog(mask = "hidden")]`
+    ///
+    /// Default implementation is provided, which swaps the value for three asterisks.
     fn mask_hide(&self) -> String {
         HIDE_STR.into()
     }
 }
 
+/// Marker type to trick compiler. Do not use.
+#[doc(hidden)]
 pub struct AsRefStr;
+/// Marker type to trick compiler. Do not use.
+#[doc(hidden)]
 pub struct DisplayStr;
 
 impl<T> DeboogField<AsRefStr> for T
 where
     T: AsRef<str>,
 {
+    fn mask_all(&self) -> String {
+        mask_all(self.as_ref())
+    }
+
     fn mask_pan(&self) -> String {
         mask_pan(self.as_ref())
     }
@@ -24,15 +53,11 @@ where
     fn mask_pan_suffix(&self) -> String {
         mask_pan_suffix(self.as_ref())
     }
-
-    fn mask_all(&self) -> String {
-        mask_all(self.as_ref())
-    }
 }
 
 macro_rules! display_impl {
     ($t:ty) => {
-        impl DeboogField<DisplayStr> for $t {
+        impl DeboogField for $t {
             fn mask_pan(&self) -> String {
                 let plain = format!("{}", self);
                 mask_pan(&plain)

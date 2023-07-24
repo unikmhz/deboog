@@ -1,11 +1,16 @@
 use std::iter::repeat;
 
+/// Default replacement value for `#[deboog(mask = "hidden")]`
 pub const HIDE_STR: &str = "***";
 
+/// Replaces all characters with `*`
 pub fn mask_all(value: &str) -> String {
     "*".repeat(value.len())
 }
 
+/// Same as [`mask_all`], but leaves unmasked characters accoring to PAN masking convention
+///
+/// Leaves 6 characters in the beginning and 4 characters at the end of the string.
 pub fn mask_pan(value: &str) -> String {
     let sz = value.len();
     let limit = if sz > 4 { sz - 4 } else { 0 };
@@ -16,6 +21,7 @@ pub fn mask_pan(value: &str) -> String {
         .collect()
 }
 
+/// Replaces all but last four characters with a single `*` symbol
 pub fn mask_pan_suffix(value: &str) -> String {
     let sz = value.len();
     let limit = if sz > 4 { sz - 4 } else { 0 };

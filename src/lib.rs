@@ -56,6 +56,93 @@
 //!     r#"Two { shown: 123 }"#
 //! );
 //! ```
+//!
+//! ## Masking
+//!
+//! Mask a field:
+//!
+//! ```rust
+//! use deboog::Deboog;
+//!
+//! #[derive(Deboog)]
+//! struct Data {
+//!     unmasked: i32,
+//!     #[deboog(mask = "all")]
+//!     masked: i32,
+//! }
+//!
+//! assert_eq!(
+//!     format!("{:?}", Data { unmasked: 123, masked: 23456 }),
+//!     r#"Data { unmasked: 123, masked: "*****" }"#
+//! );
+//! ```
+//!
+//! Mask a credit card number or a similar value:
+//!
+//! ```rust
+//! use deboog::Deboog;
+//!
+//! #[derive(Deboog)]
+//! struct Data {
+//!     unmasked: &'static str,
+//!     #[deboog(mask = "pan")]
+//!     masked: &'static str,
+//! }
+//!
+//! assert_eq!(
+//!     format!("{:?}", Data { unmasked: "1111222233334444", masked: "1111222233334444" }),
+//!     r#"Data { unmasked: "1111222233334444", masked: "111122******4444" }"#
+//! );
+//! ```
+//!
+//! In case you need to hide real field length:
+//!
+//! ```rust
+//! use deboog::Deboog;
+//!
+//! #[derive(Deboog)]
+//! struct Data {
+//!     unmasked: i32,
+//!     #[deboog(mask = "hidden")]
+//!     masked: i32,
+//! }
+//!
+//! assert_eq!(
+//!     format!("{:?}", Data { unmasked: 123, masked: 23456 }),
+//!     r#"Data { unmasked: 123, masked: "***" }"#
+//! );
+//! ```
+//!
+//! ## Type support
+//!
+//! Support for masking for custom field types can be implemented using [`field::DeboogField`] trait:
+//!
+//! ```rust
+//! use deboog::{Deboog, field::DeboogField};
+//!
+//! #[derive(Deboog)]
+//! struct What;
+//!
+//! impl DeboogField for What {
+//!     fn mask_all(&self) -> String {
+//!         "WHAT?".into()
+//!     }
+//! }
+//!
+//! #[derive(Deboog)]
+//! struct Data {
+//!     unmasked: What,
+//!     #[deboog(mask = "all")]
+//!     masked: What,
+//! }
+//!
+//! assert_eq!(
+//!     format!("{:?}", Data { unmasked: What, masked: What }),
+//!     r#"Data { unmasked: What, masked: "WHAT?" }"#
+//! );
+//! ```
+
+#![warn(missing_docs)]
 
 /// Field conversion trait impls
 pub mod field;
