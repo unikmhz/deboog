@@ -3,12 +3,34 @@ use std::iter::repeat;
 /// Default replacement value for `#[deboog(mask = "hidden")]`
 pub const HIDE_STR: &str = "***";
 
+/// Mask type
+#[derive(Clone, Copy)]
+pub enum MaskType {
+    /// Replaces all characters with `*`
+    All,
+    /// Same as [`MaskType::All`], but leaves unmasked characters according to PAN masking convention
+    ///
+    /// Leaves 6 characters in the beginning and 4 characters at the end of the string.
+    Pan,
+    /// Replaces all but last four characters with a single `*` symbol
+    PanSuffix,
+}
+
+/// Produces masked string based on mask type
+pub fn mask(value: &str, mask_type: MaskType) -> String {
+    match mask_type {
+        MaskType::All => mask_all(value),
+        MaskType::Pan => mask_pan(value),
+        MaskType::PanSuffix => mask_pan_suffix(value),
+    }
+}
+
 /// Replaces all characters with `*`
 pub fn mask_all(value: &str) -> String {
     "*".repeat(value.len())
 }
 
-/// Same as [`mask_all`], but leaves unmasked characters accoring to PAN masking convention
+/// Same as [`mask_all`], but leaves unmasked characters according to PAN masking convention
 ///
 /// Leaves 6 characters in the beginning and 4 characters at the end of the string.
 pub fn mask_pan(value: &str) -> String {

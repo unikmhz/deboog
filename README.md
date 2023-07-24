@@ -81,7 +81,7 @@ struct Data {
 
 assert_eq!(
     format!("{:?}", Data { unmasked: 123, masked: 23456 }),
-    r#"Data { unmasked: 123, masked: "*****" }"#
+    r#"Data { unmasked: 123, masked: ***** }"#
 );
 ```
 
@@ -117,7 +117,7 @@ struct Data {
 
 assert_eq!(
     format!("{:?}", Data { unmasked: 123, masked: 23456 }),
-    r#"Data { unmasked: 123, masked: "***" }"#
+    r#"Data { unmasked: 123, masked: *** }"#
 );
 ```
 
@@ -126,14 +126,14 @@ assert_eq!(
 Support for masking for custom field types can be implemented using [`field::DeboogField`] trait:
 
 ```rust
-use deboog::{Deboog, field::DeboogField};
+use deboog::{Deboog, DeboogField, MaskType};
 
 #[derive(Deboog)]
 struct What;
 
 impl DeboogField for What {
-    fn mask_all(&self) -> String {
-        "WHAT?".into()
+    fn fmt_masked(&self, f: &mut std::fmt::Formatter<'_>, _mask_type: MaskType) -> std::fmt::Result {
+        write!(f, "WHAT?")
     }
 }
 
@@ -146,7 +146,7 @@ struct Data {
 
 assert_eq!(
     format!("{:?}", Data { unmasked: What, masked: What }),
-    r#"Data { unmasked: What, masked: "WHAT?" }"#
+    r#"Data { unmasked: What, masked: WHAT? }"#
 );
 ```
 
