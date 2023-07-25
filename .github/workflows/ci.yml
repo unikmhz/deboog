@@ -14,8 +14,10 @@ jobs:
     name: CI checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: Swatinem/rust-cache@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Package cache
+        uses: Swatinem/rust-cache@v2
       - name: Build
         run: cargo build --verbose --workspace --all-features
       - name: Check formatting
@@ -24,21 +26,28 @@ jobs:
         run: cargo clippy --workspace --all-features -- -D warnings
       - name: Build docs
         run: cargo doc --document-private-items --workspace --all-features --no-deps
+      - name: Check semver
+        uses: obi1kenobi/cargo-semver-checks-action@v2
   test:
     name: Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: Swatinem/rust-cache@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Package cache
+        uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo test --verbose --all
   cov:
     name: Coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: Swatinem/rust-cache@v2
-      - uses: taiki-e/install-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Package cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install coverage tool
+        uses: taiki-e/install-action@v2
         with:
           tool: cargo-llvm-cov@0.5
       - name: Generate code coverage
