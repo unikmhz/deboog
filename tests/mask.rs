@@ -87,11 +87,7 @@ fn mask_all_vec_struct_field() {
         v: Vec<&'static str>,
     }
     let our = Test {
-        v: vec![
-            "12345",
-            "23456",
-            "345",
-        ],
+        v: vec!["12345", "23456", "345"],
     };
     assert_eq!(
         format!("{:?}", our),
@@ -108,11 +104,7 @@ fn mask_all_vec_optional_struct_field() {
         v: Vec<Option<&'static str>>,
     }
     let our = Test {
-        v: vec![
-            Some("12345"),
-            Some("234"),
-            None,
-        ],
+        v: vec![Some("12345"), Some("234"), None],
     };
     assert_eq!(
         format!("{:?}", our),

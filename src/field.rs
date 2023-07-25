@@ -89,7 +89,11 @@ impl<T: DeboogField> DeboogField for Vec<T> {
 macro_rules! display_impl {
     ($t:ty) => {
         impl DeboogField for $t {
-            fn fmt_masked(&self, f: &mut std::fmt::Formatter<'_>, mask_type: MaskType) -> std::fmt::Result {
+            fn fmt_masked(
+                &self,
+                f: &mut std::fmt::Formatter<'_>,
+                mask_type: MaskType,
+            ) -> std::fmt::Result {
                 let plain = format!("{}", self);
                 write!(f, "{}", mask(&plain, mask_type))
             }
