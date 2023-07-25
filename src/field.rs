@@ -3,7 +3,6 @@ use std::fmt::{self, Debug, Formatter};
 use crate::masking::*;
 
 /// Wrapper object to specify type of masking
-#[derive(Clone, Copy)]
 pub enum Masked<'a, T: DeboogField> {
     /// Replaces all characters with `*`
     All(&'a T),
