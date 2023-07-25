@@ -1,4 +1,4 @@
-use deboog::Deboog;
+use deboog::{Deboog, DeboogField};
 
 #[test]
 fn mask_pan_struct_field() {
@@ -110,6 +110,22 @@ fn mask_all_vec_optional_struct_field() {
         format!("{:?}", our),
         r#"Test { v: [Some("*****"), Some("***"), None] }"#
     );
+}
+
+#[test]
+fn mask_all_default_impl() {
+    struct Item;
+
+    impl DeboogField for Item {}
+
+    #[allow(dead_code)]
+    #[derive(Deboog)]
+    struct Test {
+        #[deboog(mask = "all")]
+        item: Item,
+    }
+    let our = Test { item: Item };
+    assert_eq!(format!("{:?}", our), r#"Test { item: *** }"#);
 }
 
 #[test]
