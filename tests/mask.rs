@@ -129,6 +129,18 @@ fn mask_all_default_impl() {
 }
 
 #[test]
+fn mask_all_string_impl() {
+    #[allow(dead_code)]
+    #[derive(Deboog)]
+    struct Test {
+        #[deboog(mask = "all")]
+        s: String,
+    }
+    let our = Test { s: "data".into() };
+    assert_eq!(format!("{:?}", our), r#"Test { s: "****" }"#);
+}
+
+#[test]
 fn mask_hidden_struct_field() {
     #[allow(dead_code)]
     #[derive(Deboog)]
