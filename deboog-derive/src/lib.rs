@@ -10,10 +10,10 @@ use syn::{parse_macro_input, spanned::Spanned, Ident, Index};
 #[derive(Clone, Copy, Default, FromMeta)]
 #[darling(default, rename_all = "snake_case")]
 enum Masking {
-    Pan,
-    PanSuffix,
     #[default]
     All,
+    Pan,
+    PanSuffix,
     Hidden,
 }
 
@@ -58,7 +58,7 @@ fn debug_fmt_impl(ident: &Ident, data: &OptionData) -> TokenStream2 {
     quote! {
         #[automatically_derived]
         impl std::fmt::Debug for #ident {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 #debug_fmt
             }
         }
@@ -173,21 +173,11 @@ fn debug_fmt_enum(variants: &[VariantOptions]) -> TokenStream2 {
 fn transform_field(field: TokenStream2, opts: &FieldOptions) -> TokenStream2 {
     match opts.mask {
         None => field,
-        Some(masking) => {
-            let mask_method = Ident::new(
-                match masking {
-                    Masking::Pan => "mask_pan",
-                    Masking::PanSuffix => "mask_pan_suffix",
-                    Masking::All => "mask_all",
-                    Masking::Hidden => "mask_hide",
-                },
-                field.span(),
-            );
-            // TODO: maybe avoid importing trait explicitly?
-            quote! { {
-                use deboog::field::DeboogField;
-                #field.#mask_method()
-            } }
-        }
+        Some(mask_type) => match mask_type {
+            Masking::All => quote! { &deboog::field::Masked::All(#field) },
+            Masking::Pan => quote! { &deboog::field::Masked::Pan(#field) },
+            Masking::PanSuffix => quote! { &deboog::field::Masked::PanSuffix(#field) },
+            Masking::Hidden => quote! { &deboog::field::Masked::Hidden(#field) },
+        },
     }
 }
