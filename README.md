@@ -150,6 +150,10 @@ assert_eq!(
 );
 ```
 
+## Version history
+
+See [change log](CHANGELOG.md).
+
 ## License
 
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or

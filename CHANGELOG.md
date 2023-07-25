@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- README and documentation.
+- Code coverage configuration.
+- Semver check action in CI.
+
+### Changed
+
+- Refactored DeboogField trait.
+- Split tests into different categories.
+
+### Fixed
+
+- Times in dependabot configuration.
+
 ## [0.1.1] - 2023-06-26
 
 ### Fixed
