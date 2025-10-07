@@ -150,6 +150,12 @@ assert_eq!(
 );
 ```
 
+## Optional features
+
+List of feature flags supported by this crate:
+
+- `chrono`: support date/time types from chrono library.
+
 ## Version history
 
 See [change log](CHANGELOG.md).

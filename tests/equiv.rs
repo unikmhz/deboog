@@ -12,7 +12,7 @@ fn eq_unit_struct() {
         struct Unit;
         Unit
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
 
 #[test]
@@ -35,22 +35,24 @@ fn eq_normal_struct() {
         }
         Normal { a: 123, b: "test" }
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
 
 #[test]
 fn eq_tuple_struct() {
     let standard = {
+        #[allow(dead_code)]
         #[derive(Debug)]
         struct Tuple(i32, &'static str);
         Tuple(123, "test")
     };
     let our = {
+        #[allow(dead_code)]
         #[derive(Deboog)]
         struct Tuple(i32, &'static str);
         Tuple(123, "test")
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
 
 #[test]
@@ -69,7 +71,7 @@ fn eq_enum() {
         }
         Basic::Variant
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
 
 #[test]
@@ -88,7 +90,7 @@ fn eq_enum_discr() {
         }
         Discr::Variant
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
 
 #[test]
@@ -109,12 +111,13 @@ fn eq_enum_w_fields() {
         }
         With::Fields { a: 123, b: "test" }
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
 
 #[test]
 fn eq_enum_w_tuple() {
     let standard = {
+        #[allow(dead_code)]
         #[derive(Debug)]
         enum With {
             Tuple(i32, &'static str),
@@ -122,11 +125,12 @@ fn eq_enum_w_tuple() {
         With::Tuple(123, "test")
     };
     let our = {
+        #[allow(dead_code)]
         #[derive(Deboog)]
         enum With {
             Tuple(i32, &'static str),
         }
         With::Tuple(123, "test")
     };
-    assert_eq!(format!("{:?}", standard), format!("{:?}", our));
+    assert_eq!(format!("{standard:?}"), format!("{our:?}"));
 }
