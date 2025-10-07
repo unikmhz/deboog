@@ -100,7 +100,8 @@ macro_rules! display_impl {
     };
 }
 
-display_impl!(bool);
+// Any other masking strategy is pointless for boolean type.
+impl DeboogField for bool {}
 
 display_impl!(i8);
 display_impl!(i16);
@@ -132,3 +133,28 @@ display_impl!(std::num::NonZeroU32);
 display_impl!(std::num::NonZeroU64);
 display_impl!(std::num::NonZeroU128);
 display_impl!(std::num::NonZeroUsize);
+
+#[cfg(feature = "chrono")]
+mod chrono_fields {
+    use super::*;
+
+    display_impl!(chrono::Weekday);
+    display_impl!(chrono::NaiveDate);
+    display_impl!(chrono::NaiveTime);
+    display_impl!(chrono::NaiveDateTime);
+
+    impl<Tz> DeboogField for chrono::DateTime<Tz>
+    where
+        Tz: chrono::TimeZone,
+        Tz::Offset: std::fmt::Display,
+    {
+        fn fmt_masked(
+            &self,
+            f: &mut std::fmt::Formatter<'_>,
+            mask_type: MaskType,
+        ) -> std::fmt::Result {
+            let plain = self.to_rfc3339();
+            write!(f, "{}", mask(&plain, mask_type))
+        }
+    }
+}
