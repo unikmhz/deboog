@@ -5,7 +5,7 @@ use darling::{
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::{quote, ToTokens};
-use syn::{parse_macro_input, spanned::Spanned, Ident, Index};
+use syn::{parse_macro_input, spanned::Spanned, Generics, Ident, Index};
 
 #[derive(Clone, Copy, Default, FromMeta)]
 #[darling(default, rename_all = "snake_case")]
@@ -23,6 +23,7 @@ type OptionData = Data<VariantOptions, FieldOptions>;
 #[darling(attributes(deboog))]
 struct Options {
     ident: Ident,
+    generics: Generics,
     data: OptionData,
 }
 
@@ -47,17 +48,17 @@ struct VariantOptions {
 pub fn derive_deboog(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input);
     let opts = Options::from_derive_input(&input).unwrap();
-    let debug_impl = debug_fmt_impl(&opts.ident, &opts.data);
+    let debug_impl = debug_fmt_impl(&opts.ident, &opts.generics, &opts.data);
 
     let output = quote! { #debug_impl };
     output.into()
 }
 
-fn debug_fmt_impl(ident: &Ident, data: &OptionData) -> TokenStream2 {
+fn debug_fmt_impl(ident: &Ident, generics: &Generics, data: &OptionData) -> TokenStream2 {
     let debug_fmt = debug_fmt_body(ident, data);
     quote! {
         #[automatically_derived]
-        impl std::fmt::Debug for #ident {
+        impl #generics std::fmt::Debug for #ident #generics {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 #debug_fmt
             }
