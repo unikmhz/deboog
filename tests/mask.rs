@@ -158,3 +158,36 @@ fn mask_hidden_struct_field() {
         r#"Test { a: "0123456789012345", b: *** }"#
     );
 }
+
+#[test]
+fn mask_with_lifetime() {
+    #[allow(dead_code)]
+    #[derive(Deboog)]
+    struct Test<'a> {
+        str1: &'a str,
+        #[deboog(mask = "all")]
+        str2: &'a str,
+        #[deboog(mask = "hidden")]
+        str3: &'a str,
+        #[deboog(mask = "pan")]
+        str4: &'a str,
+        #[deboog(mask = "pan_suffix")]
+        str5: &'a str,
+    }
+    let str1 = String::from("12345678");
+    let str2 = String::from("87654321");
+    let str3 = String::from("AAAAAAAA");
+    let str4 = String::from("BBBBBBBBBBBBBBBB");
+    let str5 = String::from("CCCCCCCC");
+    let our = Test {
+        str1: &str1,
+        str2: &str2,
+        str3: &str3,
+        str4: &str4,
+        str5: &str5,
+    };
+    assert_eq!(
+        format!("{:?}", our),
+        r#"Test { str1: "12345678", str2: "********", str3: ***, str4: "BBBBBB******BBBB", str5: "*CCCC" }"#,
+    );
+}
